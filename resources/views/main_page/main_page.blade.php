@@ -9,7 +9,7 @@
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
 </head>
-<body class="main_page">
+<body class="main_page" user-name="{{auth()->user()->name}}">
     
     <div class="container-wrapper">
         <div class="container-wrap">
@@ -47,7 +47,11 @@
                             {{-- contacts or settings will be displayed here depending on what the option the user clicks --}}
                         </div>
                     </div>
-                    <div class="inner-right-panel"></div>
+                    <div class="inner-right-panel">
+                        <div class="inner-right-panel-content">
+                            {{-- chats go here --}}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

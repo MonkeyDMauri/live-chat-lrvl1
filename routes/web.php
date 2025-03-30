@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContactsController;
+use App\Http\Controllers\MessagesController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -29,3 +30,7 @@ Route::get('/get-all-contacts', [ContactsController::class, 'getAllContacts']);
 // Get selected contact info;
 Route::post('/get-selected-contact', [ContactsController::class, 'getSelectedContact']);
 
+//save messages to messages table.
+Route::post('/save-message', [MessagesController::class, 'saveMessage']);
+
+Route::post('/get-messages', [MessagesController::class, 'getAllMessages']);

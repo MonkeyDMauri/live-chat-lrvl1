@@ -195,6 +195,7 @@
     width: 160px;
 }
 
+/*  CHAT STYLING    */
 .selected-contact-info {
     display: flex;
     justify-content: center;
@@ -211,4 +212,79 @@
 .selected-contact-pic {
     height: 150px;
     border-radius: 50%;
+}
+
+.chat-header {
+    padding: 1.5rem;
+    background-color: black;
+    height: 100px;
+}
+
+.chat-header h1{
+    font-size: 2rem;
+}
+
+.chat-messages-wrapper {
+    background-color: rgb(0, 68, 128);
+    height: 400px;
+    overflow: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1.5rem;
+}
+
+.send-message-bar {
+    background-color: rgb(3, 3, 124);
+    height: 100px;
+    padding: 1.5rem;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.message-input {
+    background-color: rgb(8, 8, 8);
+    color: white;
+    padding: .5rem;
+    border-radius: .5rem;
+    font-size: 1.5rem;
+    overflow-wrap: break-word;
+    max-height: 55px;
+    min-width: 300px;
+    max-width: 300px;
+    resize: none;
+}
+
+.send-message-btn {
+    background-color: black;
+    padding: .5rem 2rem;
+    border-radius: .5rem;
+    cursor: pointer;
+}
+
+.send-message-btn:hover {
+    outline: white solid 1px;
+}
+
+/*  MESSAGE STYLING  */
+
+.message-wrap-left {
+    color: rgb(255, 255, 255);
+    background-color: rgb(75, 139, 2);
+    width: fit-content;
+    padding: 1rem;
+    border-bottom-left-radius: 1rem;
+}
+
+.message-wrap-right {
+    color: rgb(255, 255, 255);
+    background-color: rgb(129, 122, 13);
+    width: fit-content;
+    padding: 1rem;
+    float: right;
+    border-bottom-right-radius: 1rem;
 }

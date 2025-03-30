@@ -25,6 +25,7 @@ _('.contacts-btn').addEventListener('click', getAllContacts);
 let allContacts = []; //variable to store all contacts;
 
 const innerLeftPanelContent = _('.inner-left-panel-content'); // grabbing inner left panel to dynamically change its content.
+const innerRightPanelContent = _('.inner-right-panel-content'); // grabbing inner right panel to dynamically chats.
 
 
 
@@ -73,6 +74,7 @@ getAllContacts();
 function displayContacts(allContacts) {
     // clearing inner left panel's content.
     innerLeftPanelContent.innerHTML = " ";
+    innerRightPanelContent.innerHTML = " ";
 
     const contactsWrapper = document.createElement('ul');
     contactsWrapper.classList = 'contacts-wrapper';
@@ -106,19 +108,42 @@ function showChat(currentContact) {
     const showInnerLeftPanelInput = document.querySelector('#show-inner-right-panel');
     showInnerLeftPanelInput.checked = true;
 
+    // if no contact to chat with has been selected then a message will show up indicating so, otherwise
+    // the selected contact info will show up.
     if (!currentContact) {
         innerLeftPanelContent.innerHTML = `
             <div style="padding:1rem;"> 
             <h1>No contact has been selected yet</h1>
             </div>
         `;
+
+        innerRightPanelContent.innerHTML = `
+            <h1 style="font-size:2.5rem; text-align:center; margin-top:4rem;">No messages to show<h1>
+        `;
     } else {
         innerLeftPanelContent.innerHTML = `
             <section class="selected-contact-info">
+                Now chatting with: 
                 <img src="/storage/profile_pics/male.jpeg" class="selected-contact-pic">
                 <h1>${currentContact.name}</h1>
+                <h1>${currentContact.id}</h1>
             </section>
         `;
+
+        innerRightPanelContent.innerHTML = `
+            <div class="chat-header">
+                <h1>${currentContact.name}</h1>
+                
+            </div>
+            <div class="chat-messages-wrapper">
+            </div>
+            <div class="send-message-bar">
+                <textarea placeholder="Type something" class="message-input"></textarea>
+                <button class="send-message-btn">send</button>
+            </div>
+        `;
+
+        getMessages();
     }
 }
 
@@ -166,3 +191,161 @@ function getContactSelected(e) {
     })
 
 }
+
+
+// SEND MESSAGE CODE.
+
+// checking to see if user is clicking send message button to then trigger the send message algorithm.
+innerRightPanelContent.addEventListener('click', e => {
+    if (e.target.matches('.send-message-btn')) {
+        getMessage();
+    }
+});
+
+// function to get message.
+function getMessage() {
+    // using the innerRightPanelContent variable to grab the message-input element and then extract its content(message).
+    const messageInput = innerRightPanelContent.querySelector('.message-input');
+    const message = messageInput.value
+
+    // if the message is empty then pretty much nothing will happen other than en error message being displayed in the console.
+    if (!message) {
+        console.log('message empty');
+    } else{ // if there's a message then we move on to the next phase which will be storing it into our messages table.
+        console.log(message);
+        messageInput.value = '';
+        saveMessageToTable(message);
+    }
+    
+
+}
+
+function saveMessageToTable(message) {
+
+    const objData = {
+        "message": message,
+        'receiver_id' : currentChatContact.id
+    };
+
+    fetch('/save-message', {
+        method: "POST",
+        headers: {
+            'Content-Type':'application/json',
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(objData)
+    })
+    .then(res => {
+        if (!res.ok) {
+            throw new Error("Network response was not ok:", res.ok);
+        } else {
+            return res.json();
+        }
+    })
+    .then(data => {
+        if (data.success) {
+            console.log("message was saved");
+            console.log('Message:', data.message);
+            getMessages();
+        }
+    })
+    .catch(error => {
+        console.error(error);
+    })
+}
+
+// CODE TO GET MESSAGES AND THEN DISPLAY THEM.
+
+
+let allMessages; // this variable will store all messages corresponding with the current logged in user and the current chat contact .
+
+function getMessages() {
+
+    const dataObj = {
+        'receiver' : currentChatContact.id
+    }
+
+    fetch('/get-messages', {
+        method: "POST",
+        headers: {
+            'Content-Type':'application/json',
+            'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(dataObj)
+    })
+    .then(res => {
+        if (!res.json) {
+            throw new Error('Network response was not ok:', res.status);
+        } else {
+            return res.json();
+        }
+    })
+    .then(data => {
+        if (data.success) {
+            allMessages = data.messages;
+            console.log('Messages:', allMessages);
+            displayMessages(allMessages);
+        }
+    })
+}
+
+function displayMessages(messages) {
+
+    console.log('Current receiver, Name:', currentChatContact.name, 'id:', currentChatContact.id);
+
+    const messagesArea = _('.chat-messages-wrapper');
+    messagesArea.innerHTML = "";
+
+
+
+    messages.forEach(message => {
+        let messageWrap;
+
+        console.log('message receiver id:', message.receiver_id);
+
+        if (message.receiver_id != currentChatContact.id) {
+            messageWrap = document.createElement('div');
+            // messageWrap.classList = 'message-wrap-left';
+            messageWrap.innerHTML = leftMessageTemplate(message);
+        } else {
+            messageWrap = document.createElement('div');
+            // messageWrap.classList = 'message-wrap-right';
+            messageWrap.innerHTML = rightMessageTemplate(message);
+        }
+
+        
+        messagesArea.appendChild(messageWrap);
+        messagesArea.scrollTop = messagesArea.scrollHeight;
+        
+    })
+
+    
+}
+
+function rightMessageTemplate(message) {
+
+    const currentUsername = _('body').getAttribute('user-name');
+
+    return `
+        <div class="message-wrap-right">
+        <h1 style="font-weight:500; color:rgb(0, 0, 0); text-align:center;">${currentUsername}</h1>
+        <h1>${message.message}</h1>
+        <span>${message.created_at}</span>
+        </div>
+    `;
+}
+
+function leftMessageTemplate(message) {
+    return `
+        <div class="message-wrap-left">
+        <h1 style="font-weight:500; color:rgb(0, 0, 0); text-align:center;">${currentChatContact.name}</h1>
+        <h1>${message.message}</h1>
+        </div>
+    `;
+}
+
+// function formattedTime(timestamp) {
+//     const date = new Date(timestamp);
+//     return date.toLocaleString();
+// }
+
