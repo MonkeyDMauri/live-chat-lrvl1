@@ -3,6 +3,8 @@ function _(element) {
     return document.querySelector(element);
 }
 
+const csrfToken = _('meta[name="csrf-token"]').getAttribute('content');
+
 // CODE TO TOGGLE LOGOUT POPUP.
 
 // if logout button is clicked then the logout popup will show up.
@@ -72,7 +74,7 @@ getAllContacts();
 
 // function to display all contacts
 function displayContacts(allContacts) {
-    // clearing inner left panel's content.
+    // clearing inner panels' content.
     innerLeftPanelContent.innerHTML = " ";
     innerRightPanelContent.innerHTML = " ";
 
@@ -344,8 +346,73 @@ function leftMessageTemplate(message) {
     `;
 }
 
-// function formattedTime(timestamp) {
-//     const date = new Date(timestamp);
-//     return date.toLocaleString();
-// }
+// SETTINGS CODE.
+
+_('.settings-btn').addEventListener('click', showSettings);
+
+function showSettings() {
+
+    // clearing inner panels' content.
+    innerLeftPanelContent.innerHTML = " ";
+    innerRightPanelContent.innerHTML = " ";
+
+    innerLeftPanelContent.innerHTML = `
+    
+        <div class="settings-wrapper">
+            <h1>Settings</h1>
+
+            <ul class="settings-list">
+                <li class="dropdown">
+                    <p>Change Username</p>
+                     <div class="dropdown-menu">
+                         <form action="/update-user-info" method="POST">
+                            <input type="hidden" name="_token" value="${csrfToken}">
+                            <label for="updated-name">Enter new username</label>
+                            <input type="text" name="new-name" placeholder="New Name" id="updated-name" class="settings-new-field-update">
+                            <button class="settings-save-btn">Save</button>
+                        </form>
+                    </div>
+                    
+                <li>
+                <li class="dropdown">
+                    <p>Change Email</p>
+                    <div class="dropdown-menu">
+                        <form action="/update-user-info" method="POST">
+                            <input type="hidden" name="_token" value="${csrfToken}">
+                            <label for="updated-email">Enter new Email</label>
+                            <input type="text" name="new-email" placeholder="New Email" id="updated-email" class="settings-new-field-update">
+                            <button class="settings-save-btn">Save</button>
+                        </form>
+                    </div>
+                <li>
+            </ul>
+        </div>
+    `;
+}
+
+// code for dropdown menus.
+
+document.addEventListener('click', e => {
+    const isDropdown = e.target.closest('.dropdown');
+
+
+    let currentDropdown;
+    if (isDropdown) {
+        console.log('dropdown was clicked');
+        currentDropdown =  isDropdown;
+        currentDropdown.classList.add('active');
+    }
+
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+        if (dropdown != currentDropdown) {
+            dropdown.classList.remove('active');
+        } else {
+            return;
+        }
+    });
+
+
+
+
+});
 

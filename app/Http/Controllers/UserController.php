@@ -42,4 +42,35 @@ class UserController extends Controller
         // return response()->json(['success' => true]);
         return redirect('/login');
     }
+
+    public function updateUserInfo(Request $request) {
+        // grabbing current user's instance.
+        $user = User::find(auth()->user()->id);
+
+        if ($request['new-name']) {
+            $input = $request->validate([
+                'new-name' => 'required|min:3|max:10|unique:users,name'
+            ]);
+
+            
+            $user->update([
+                'name' => $input['new-name']
+            ]);
+
+            return redirect('/main_page')->with('update-success', 'Username was updated');
+        } 
+
+        if ($request['new-email']) {
+            
+            $input = $request->validate([
+                'new-email' => 'required|email|unique:users,email'
+            ]);
+
+            $user->update([
+                'email' => $input['new-email']
+            ]);
+
+            return redirect('/main-page')->with('update-success', 'Email was updated');
+        }
+    }
 }

@@ -66,6 +66,8 @@
 .container-wrapper {
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 .container-wrap {
@@ -287,4 +289,72 @@
     padding: 1rem;
     float: right;
     border-bottom-right-radius: 1rem;
+}
+
+/*  SETTINGS STYLING    */
+.settings-wrapper{
+    padding: 2rem;
+}
+
+.settings-wrapper h1{
+    text-align: center;
+}
+
+.settings-list {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+
+    background-color: rgb(6, 6, 145);
+    border-radius: .5rem;
+    padding: 1rem;
+}
+
+.settings-list p{
+    cursor: pointer;
+}
+
+.dropdown {
+    position: relative;
+    width: fit-content;
+}
+
+.dropdown-menu {
+    /* visibility: hidden; */
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 10px;
+    left: 80px;
+    z-index: 1;
+    transform: translateY(-10px);
+    background-color: gray;
+    transition: ease-in-out all 300ms;
+    padding: 1rem;
+    border-radius: .5rem;
+}
+
+.dropdown-menu label {
+    font-size: 1.2rem;
+}
+
+.dropdown.active > .dropdown-menu {
+    opacity: 1;
+
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.settings-new-field-update {
+    background-color: aliceblue;
+    color: black;
+    padding: .5rem;
+}
+
+.settings-save-btn {
+    background-color: black;
+    color: aliceblue;
+    padding: .5rem 1rem;
+    border-radius: .5rem;
+    margin-top: 1rem;
 }

@@ -34,3 +34,6 @@ Route::post('/get-selected-contact', [ContactsController::class, 'getSelectedCon
 Route::post('/save-message', [MessagesController::class, 'saveMessage']);
 
 Route::post('/get-messages', [MessagesController::class, 'getAllMessages']);
+
+//update user info routes.
+Route::post('/update-user-info', [UserController::class, "updateUserInfo"]);

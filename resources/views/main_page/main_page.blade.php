@@ -12,6 +12,9 @@
 <body class="main_page" user-name="{{auth()->user()->name}}">
     
     <div class="container-wrapper">
+        @if(session('update-success'))
+            <p style="text-align:center; weight: 600; font-size: 1.5rem;">{{session('update-success')}}</p>
+        @endif
         <div class="container-wrap">
             <div class="left-panel">
                 <div class="left-panel-user-info-container">
@@ -29,7 +32,7 @@
                     <ul class="left-panel-btns">
                         <label for="show-inner-right-panel"class="chat-btn">Chat</label>
                         <label for="hide-inner-right-panel"class="contacts-btn">Contacts</label>
-                        <label for="hide-inner-right-panel">Settings</label>
+                        <label for="hide-inner-right-panel" class="settings-btn">Settings</label>
                         <label class="logout-btn">Logout</label>
                     </ul>
                 </div>
