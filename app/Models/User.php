@@ -45,4 +45,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function formatDate() {
+        return $this->created_at->format('m/d/Y');
+    }
+    
+    public function formatLastUpdate() {
+        return $this->updated_at->format('h:i:s m/d/Y');
+    }
 }

@@ -12,9 +12,16 @@
 <body class="main_page" user-name="{{auth()->user()->name}}">
     
     <div class="container-wrapper">
+
+        {{-- Messages to be shown at the top --}}
         @if(session('update-success'))
-            <p style="text-align:center; weight: 600; font-size: 1.5rem;">{{session('update-success')}}</p>
+            <p style="text-align:center; font-weight: 600; font-size: 1.5rem;">{{session('update-success')}}</p>
         @endif
+        @if (session('update-password-error'))
+            <p style="text-align:center; font-weight: 600; font-size: 1.5rem; color:red; margin-top:2rem;">{{session('update-password-error')}}</p>
+        @endif
+
+        {{-- main container --}}
         <div class="container-wrap">
             <div class="left-panel">
                 <div class="left-panel-user-info-container">
@@ -73,5 +80,17 @@
             </div>
         </div>
     </div>
+
+    <?php
+        $user = ['name' => auth()->user()->name,
+            'email' => auth()->user()->email,
+            'created_at' => auth()->user()->formatDate(),
+            'updated_at' => auth()->user()->formatLastUpdate()
+        ];
+    ?>
+
+    <script>
+        const user = @json($user);
+    </script>
 </body>
 </html>

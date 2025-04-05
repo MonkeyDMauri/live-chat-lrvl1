@@ -3,7 +3,7 @@ function _(element) {
     return document.querySelector(element);
 }
 
-const csrfToken = _('meta[name="csrf-token"]').getAttribute('content');
+const csrfToken = _('meta[name="csrf-token"]').getAttribute('content'); // CSRF token for fetch API request or forms created using javascript.
 
 // CODE TO TOGGLE LOGOUT POPUP.
 
@@ -359,7 +359,7 @@ function showSettings() {
     innerLeftPanelContent.innerHTML = `
     
         <div class="settings-wrapper">
-            <h1>Settings</h1>
+            <h1 style="font-size:2rem; font-weight:600;">Settings</h1>
 
             <ul class="settings-list">
                 <li class="dropdown">
@@ -385,6 +385,25 @@ function showSettings() {
                         </form>
                     </div>
                 <li>
+                <li class="dropdown">
+                    <p>Change Password</p>
+                    <div class="dropdown-menu">
+                        <form action="/update-user-info" method="POST">
+                            <input type="hidden" name="_token" value="${csrfToken}">
+                            <label for="current-password">Enter current password</label>
+                            <input type="password" name="current-password" placeholder="Current password" id="current-password" class="settings-new-field-update" required>
+
+                            <label for="updated-password">Enter new password</label>
+                            <input type="password" name="new_password" placeholder="New password" id="updated-password" class="settings-new-field-update" required>
+
+                            <label for="confirm-password">Confirm new password</label>
+                            <input type="password" name="new_password_confirmation" placeholder="Enter new pwd again" id="confirm-password" class="settings-new-field-update" required>
+                            <button class="settings-save-btn">Save</button>
+                        </form>
+                    </div>
+                <li>
+                <li>-you joined on ${user.created_at}</li>
+                <li>-account last uodated at ${user.updated_at}</li>
             </ul>
         </div>
     `;

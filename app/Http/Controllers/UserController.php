@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -72,5 +73,28 @@ class UserController extends Controller
 
             return redirect('/main-page')->with('update-success', 'Email was updated');
         }
+
+        if ($request['current-password']) {
+            $input = $request->validate([
+                'current-password' => 'required|min:4',
+                'new_password' => 'required|min:4|confirmed'
+            ], [
+                'new_password.confirmed' => 'New password doesnt match'
+            ]);
+
+            if (!Hash::check($input['current-password'], auth()->user()->password)) {
+                return back()->with('update-password-error', 'Wrong password');
+            } 
+
+            $newHashedPwd = Hash::make($input['new_password']);
+
+            $user->update([
+                'password' => $newHashedPwd
+            ]);
+
+            return back()->with('update-success', 'Password has been updated');
+        }
+
+        return redirect('/main-page');
     }
 }
